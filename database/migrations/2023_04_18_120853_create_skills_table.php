@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('skills', function (Blueprint $table) {
             $table->id();
+            $table->integer('sector_id');
             $table->string('skills');
             $table->enum('status', ['pending', 'active', 'deleted']);
             $table->timestamps();

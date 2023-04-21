@@ -19,23 +19,23 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['middleware' => ['api']], function ($router) {        
-    Route::post('/register', [App\Http\Controllers\Api\AuthController::class, 'register']);
-    Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);
-    Route::post('/logout', [App\Http\Controllers\Api\AuthController::class, 'logout']);
-    Route::post('/refresh', [App\Http\Controllers\Api\AuthController::class, 'refresh']);
+    Route::post('/register', 'App\Http\Controllers\Api\AuthController@register');
+    Route::post('/login', 'App\Http\Controllers\Api\AuthController@login');
+    Route::post('/logout', 'App\Http\Controllers\Api\AuthController@logout');
+    Route::post('/refresh', 'App\Http\Controllers\Api\AuthController@refresh');
 });
 
 Route::group(['middleware' => ['auth:api', 'jwt.auth'], 'prefix' => 'users'], function ($router) {        
-    Route::get('/users/{user_id}/first-login', 'App\Http\Controllers\Api\UserController@isFirstLogin');
-    Route::get('/users/{user_id}/unlock_instant_apply', 'App\Http\Controllers\Api\UserController@check_unlock_instant_apply');
-    Route::get('getusers/{user_id}/job-preferences', 'App\Http\Controllers\Api\UserController@getJobPreferences');
-    Route::put('updateusers/{user_id}/job-preferences', 'App\Http\Controllers\Api\UserController@updateJobPreferences');
+    Route::get('/firstlogin/{user_id}', 'App\Http\Controllers\Api\UserController@isFirstLogin');
+    Route::get('/check_unlock_instant_apply/{user_id}', 'App\Http\Controllers\Api\UserController@check_unlock_instant_apply');
+    Route::get('/jobpreferences/{user_id}', 'App\Http\Controllers\Api\UserController@getJobPreferences');
+    Route::put('updatejobpreferences/{user_id}', 'App\Http\Controllers\Api\UserController@updateJobPreferences');
     Route::get('/getusersdetails/{id}', 'App\Http\Controllers\Api\UserController@getUserDetails');
-    Route::put('/updateuserempaloyee/{id}', 'App\Http\Controllers\Api\UserController@updateEmployee');
-    Route::delete('/deleteusers/{id}', 'App\Http\Controllers\Api\UserController@deleteUser');
-    Route::put('/users/{user_id}/profile-percentage/{value}', 'App\Http\Controllers\Api\UserController@updateProfilePercentage');
-    Route::put('/updatestatus/{user_id}/status/{value}', 'App\Http\Controllers\Api\UserController@updateStatus');
-    Route::put('/users/{id}/email-verified', 'App\Http\Controllers\Api\UserController@updateEmailVerified');
+    Route::put('/updateemployee/{id}', 'App\Http\Controllers\Api\UserController@updateEmployee');
+    Route::delete('/deleteuser/{id}', 'App\Http\Controllers\Api\UserController@deleteUser');
+    Route::put('/updateprofilepercentage/{user_id}/{value}', 'App\Http\Controllers\Api\UserController@updateProfilePercentage');
+    Route::put('/updatestatus/{user_id}/{value}', 'App\Http\Controllers\Api\UserController@updateStatus');
+    Route::put('/updateemailverified/{id}', 'App\Http\Controllers\Api\UserController@updateEmailVerified');
 });
 
 Route::group(['middleware' => ['auth:api', 'jwt.auth'], 'prefix' => 'company'], function ($router) {        
@@ -104,6 +104,49 @@ Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'interview'],
     Route::post('/insertinterviews', 'App\Http\Controllers\Api\InterviewController@insertInterview');
     Route::put('/updateinterviews/{id}', 'App\Http\Controllers\Api\InterviewController@updateInterview');
     Route::delete('/deleteinterviews/{id}', 'App\Http\Controllers\Api\InterviewController@deleteInterview');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'jobs'], function ($router) {
+    Route::get('/getalljobs', 'App\Http\Controllers\Api\JobsController@getAllJobs');
+    Route::get('/getsinglejobs/{id}', 'App\Http\Controllers\Api\JobsController@getSingleJob');
+    Route::get('/getsortbyjobs/{option}', 'App\Http\Controllers\Api\JobsController@getSortByJobs');
+    Route::post('/createjobs', 'App\Http\Controllers\Api\JobsController@createJob');
+    Route::put('/updatejobs/{id}', 'App\Http\Controllers\Api\JobsController@updateJob');
+    Route::delete('/deletejobs/{id}', 'App\Http\Controllers\Api\JobsController@deleteJob');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'skills'], function ($router) {
+    Route::get('/getallskills', 'App\Http\Controllers\Api\SkillController@getAllSkills');
+    Route::get('/getsingleskills/{id}', 'App\Http\Controllers\Api\SkillController@getSingleSkills');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'employeeskills'], function ($router) {
+    Route::get('/getallemployeeskills', 'App\Http\Controllers\Api\EmployeeSkillsController@getAllEmployeeSkills');
+    Route::post('/addemployeeskills', 'App\Http\Controllers\Api\EmployeeSkillsController@addEmployeeSkills');
+    Route::put('/updateemployeeskills/{id}', 'App\Http\Controllers\Api\EmployeeSkillsController@updateEmployeeSkills');
+    Route::delete('/deleteemployeeskills/{id}', 'App\Http\Controllers\Api\EmployeeSkillsController@deleteEmployeeSkills');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'languages'], function ($router) {
+    Route::get('/getalllanguages', 'App\Http\Controllers\Api\LanguageController@getAllLanguages');
+    Route::get('/getsinglelanguages/{id}', 'App\Http\Controllers\Api\LanguageController@getSingleLanguages');
+    Route::post('/addlanguage', 'App\Http\Controllers\Api\LanguageController@addLanguages');
+    Route::put('/updatelanguages/{id}', 'App\Http\Controllers\Api\LanguageController@updateLanguages');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'portfolio'], function ($router) {
+    Route::get('/getallportfolios', 'App\Http\Controllers\Api\PortfolioController@getAllPortfolios');
+    Route::get('/getsingleportfolio/{id}', 'App\Http\Controllers\Api\PortfolioController@getSinglePortfolio');
+    Route::post('/addportfolio', 'App\Http\Controllers\Api\PortfolioController@addPortfolio');
+    Route::put('/updateportfolio/{id}', 'App\Http\Controllers\Api\PortfolioController@updatePortfolio');
+    Route::delete('/deleteportfolio/{id}', 'App\Http\Controllers\Api\PortfolioController@deletePortfolio');
+});
+
+Route::group(['middleware' => ['auth:api', 'jwt.auth'],'prefix' => 'sector'], function ($router) {
+    router.get('/getallsectors', 'App\Http\Controllers\Api\SectorController@getAllSectors');
+    router.get('/getsinglesector/{id}', 'App\Http\Controllers\Api\SectorController@getSingleSector');
+    router.post('/addsector', 'App\Http\Controllers\Api\SectorController@addSector');
+    router.put('/updatesectors/{id}', 'App\Http\Controllers\Api\SectorController@updateSector');
 });
 
 Route::group(['middleware' => ['auth:api','jwt.auth'],'prefix' => 'errorlog'], function(){

@@ -84,7 +84,7 @@ class EducationController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
+    public function updateEducation(Request $request, $id)
     {
         try{
             $education = Education::find($id);
@@ -111,7 +111,7 @@ class EducationController extends Controller
         }
     }
 
-    public function destroy($id)
+    public function deleteEducation($id)
     {
         try{
             $education = Education::where('id', $id)->update(['status'=>'deleted']);
